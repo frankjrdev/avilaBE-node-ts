@@ -1,20 +1,19 @@
-
 import "dotenv/config";
-import expres from "express";
+import express from "express";
 import cors from "cors";
 import { router } from "./routes/user.routes";
+import db from "./db/db";
 
 const PORT = process.env.PORT || 3001;
-const app = expres();
+const app = express();
 
 app.use(cors());
+app.use(express.json());
+app.use(router);
 
+//DB connection
+db().then(() => console.log("Conection Ready"));
 
 app.listen(PORT, () => {
-    console.log(`RUN ON PORT ${PORT}`);
-
-})
-
-app.use(router)
-
-
+  console.log(`RUN ON PORT ${PORT}`);
+});
