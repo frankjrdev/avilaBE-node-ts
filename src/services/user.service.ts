@@ -3,6 +3,7 @@ import { User } from '../interfaces/user.interface';
 import { encrypt, verified } from '../utils/bcrypt.handle';
 import { generateJWT } from '../utils/jwt.handle';
 import { Auth } from '../interfaces/auth.interfaces';
+import UserJWTModel from '../models/UserJWT';
 
 
 
@@ -27,29 +28,30 @@ export const getUserService = async (id: string) => {
 }
 
 export const loginUser = async ({ email, password }: Auth) => {
-    const checkIs = await UserModel.findOne({ email });
-    if (!checkIs) return "NOT_FOUND_USER";
+    const user = await UserModel.findOne({ email });
+    if (!user) return "NOT_FOUND_USER";
 
-    const passwordHash = checkIs.password; //TODO el encriptado!
+    const passwordHash = user.password; //TODO el encriptado!
     const isCorrect = await verified(password, passwordHash);
 
     if (!isCorrect) return "PASSWORD_INCORRECT";
 
-    const token = generateJWT(checkIs.email);
+    const token = generateJWT(user.id);
+    const idUser = user.id
+    const userAuth = await UserJWTModel.create({ idUser, token });
     const data = {
         token,
-        user: checkIs,
+        user,
+        userAuth
     };
     return data;
 };
 
 export const logoutUser = async ({ id, token }: any) => {
 
-    const checkIs = await UserModel.findByIdAndUpdate(id, { token: "fsdgsdfgsdfg" });
-    const userUpdate = await UserModel.findById(id);
-    if (!checkIs) return "NOT_FOUND_USER";
-    const data = {
-        userUpdate
-    };
-    return data;
+    const userNoToken = await UserJWTModel.findOneAndUpdate({ id, token: "" });
+    const response = {
+        userNoToken
+    }
+    return response;
 };
