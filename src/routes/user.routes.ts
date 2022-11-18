@@ -1,17 +1,21 @@
-import { Request, Response, Router } from "express";
-import { getUser } from "../controllers/user.controller";
+import { Router } from "express";
+import { loginUserController, getUserController, createUserController, getAllUsers, logoutUserController } from '../controllers/user.controller';
 
-const router = Router();
+const routerUser = Router();
 
 /**
  * https://localhost:3002/users[GET]
  * obtiene todos los uduarios
  */
 
-router.get("/users", (_req: Request, res: Response) => {
-    res.send({ users: "Envio de todos los usuarios" });
-});
+routerUser.get("/user/all", getAllUsers);
 
-router.get('/:id', getUser);
+routerUser.get('/user/:id', getUserController);
 
-export { router };
+routerUser.post('/user/createUser', createUserController);
+
+routerUser.post('/user/sigin', loginUserController);
+
+routerUser.post('/user/sigout', logoutUserController);
+
+export { routerUser };

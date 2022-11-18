@@ -4,8 +4,10 @@
   "description": "Prueba BE avilaTek Node-Ts",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./src/app.ts",
-    "tsc": "tsc",
+    "build": "rm -rf build && tsc",
+    "dev": "nodemon --config nodemon.json src/app.ts",
+    "dev:debug": "nodemon --config nodemon.json --inspect src/app.ts",
+    "start": "node build/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -33,6 +35,7 @@
     "bcryptjs": "^2.4.3",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.0",
     "typescript": "^4.9.3"
   },
   "dependencies": {
